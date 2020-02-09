@@ -35,9 +35,12 @@
     "react-dom": "^16.12.0"
   },
   "author": "Lucas Akira Uehara <akirauehara@hotmail.com>",
-  "homepage": "",
+  "homepage": "https://github.com/KsAkira10/react-keycloak-js",
   "license": "MIT",
-  "repository": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KsAkira10/react-keycloak-js.git"
+  },
   "keywords": [
     "react",
     "keycloak-js"
