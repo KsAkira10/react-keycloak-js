@@ -5,7 +5,8 @@ module.exports = {
     umd: {
       global: 'ReactKeycloak',
       externals: {
-        react: 'React'
+        react: 'React',
+        keycloak: 'Keycloak',
       }
     }
   }
