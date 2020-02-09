@@ -1,13 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
+import './index.css';
+import App from './App';
 
-import Example from '../../src';
-
-const Demo = () => (
-  <div>
-    <h1>react-keycloak Demo</h1>
-    <Example />
-  </div>
-);
-
-render(<Demo />, document.querySelector('#demo'));
+render(<App />, document.getElementById('root'));

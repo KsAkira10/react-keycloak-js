@@ -19,7 +19,6 @@ export const createKeycloakProvider = KeycloakContext => {
     keycloak,
     LoadingComponent,
     initialized,
-    isLoading,
     initConfig,
     onEvent,
     onTokens,
@@ -114,6 +113,7 @@ export const createKeycloakProvider = KeycloakContext => {
     if (!!LoadingComponent && (!state.initialized || state.isLoading)) {
       return LoadingComponent;
     }
+
     return (
       <KeycloakContext.Provider value={{ initialized, keycloak }}>
         {children}
@@ -162,6 +162,6 @@ export const createKeycloakProvider = KeycloakContext => {
 
 export const KeycloakContext = createKeycloakContext();
 
-export const KeycloakProvider = createKeycloakProvider(KeycloakContext);
+const KeycloakProvider = createKeycloakProvider(KeycloakContext);
 
 export default KeycloakProvider;
