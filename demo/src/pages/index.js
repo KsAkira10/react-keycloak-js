@@ -22,10 +22,20 @@ const Pages = ({ history, routes }) => {
           <Suspense fallback={<Fallback />}>
             {routes.map(({ path, exact, component, isAuth }) =>
               isAuth == null ? (
-                <Route path={path} exact={exact} component={component} key={path} />
+                <Route
+                  path={path}
+                  exact={exact}
+                  component={component}
+                  key={path}
+                />
               ) : (
-                <PrivateRoute path={path} exact={exact} component={component} key={path} />
-              ),
+                <PrivateRoute
+                  path={path}
+                  exact={exact}
+                  component={component}
+                  key={path}
+                />
+              )
             )}
           </Suspense>
         </Switch>
@@ -41,9 +51,9 @@ Pages.propTypes = {
       path: string,
       exact: bool,
       isAuth: bool,
-      component: object,
-    }),
-  ),
+      component: object
+    })
+  )
 };
 
 Pages.defaultProps = {
@@ -51,20 +61,20 @@ Pages.defaultProps = {
     {
       path: '/',
       exact: true,
-      component: lazy(() => import('./Home')),
+      component: lazy(() => import('./Home'))
     },
     {
       path: '/login',
       exact: true,
-      component: lazy(() => import('./Login')),
+      component: lazy(() => import('./Login'))
     },
     {
       path: '/domain',
       exact: true,
       isAuth: true,
-      component: lazy(() => import('./Domain')),
-    },
-  ],
+      component: lazy(() => import('./Domain'))
+    }
+  ]
 };
 
 export default connect(({ history }) => ({ history }))(Pages);

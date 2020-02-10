@@ -22,6 +22,7 @@
   "dependencies": {
     "@react-keycloak/web": "^1.0.2",
     "dotenv-webpack": "^1.7.0",
+    "hoist-non-react-statics": "^3.3.2",
     "keycloak-js": "^8.0.2",
     "react-is": "^16.12.0",
     "react-redux": "^7.1.3",

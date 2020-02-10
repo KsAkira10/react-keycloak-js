@@ -18,7 +18,7 @@ const withKeycloak = Component => {
     return <Context.Consumer>{componentRendered}</Context.Consumer>;
   };
 
-  WithKeycloakComponent.WrappedComponent = WrappedComponent;
+  WithKeycloakComponent.WrappedComponent = Component;
   WithKeycloakComponent.displayName = displayName;
 
   return hoistStatics(WithKeycloakComponent, Component);

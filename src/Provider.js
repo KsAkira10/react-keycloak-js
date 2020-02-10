@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { element, shape, func, string } from 'prop-types';
 import createKeycloakContext from './Context';
 
@@ -14,19 +14,35 @@ export const createKeycloakProvider = KeycloakContext => {
     promiseType: 'native'
   };
 
-  const keycloakProvider = ({
+  const KeycloakProvider = ({
     children,
+    initConfig,
     keycloak,
     LoadingComponent,
-    initialized,
-    initConfig,
     onEvent,
     onTokens,
     isLoadingCheck
   }) => {
     const [state, setState] = useState({ ...initialState });
+    const resetState = useCallback(() => setState({ ...initialState }), [
+      initialState
+    ]);
 
-    const onKeycloakError = event => error => onEvent && onEvent(event, error);
+    const init = () => {
+      keycloak.onReady = updateState('onReady');
+      keycloak.onAuthSuccess = updateState('onAuthSuccess');
+      keycloak.onAuthError = onKeycloakError('onAuthError');
+      keycloak.onAuthRefreshSuccess = updateState('onAuthRefreshSuccess');
+      keycloak.onAuthRefreshError = onKeycloakError('onAuthRefreshError');
+      keycloak.onAuthLogout = updateState('onAuthLogout');
+      keycloak.onTokenExpired = refreshKeycloakToken('onTokenExpired');
+
+      keycloak.init({ ...defaultInitConfig, ...initConfig });
+    };
+
+    const onKeycloakError = event => error => {
+      return onEvent && onEvent(event, error);
+    };
 
     const updateState = event => () => {
       const {
@@ -36,13 +52,10 @@ export const createKeycloakProvider = KeycloakContext => {
       } = state;
       const { idToken, refreshToken, token: newToken } = keycloak;
 
-      // Notify Events listener
       onEvent && onEvent(event);
 
-      // Check Loading state
       const isLoading = isLoadingCheck ? isLoadingCheck(keycloak) : false;
 
-      // Avoid double-refresh if state hasn't changed
       if (
         !prevInitialized ||
         isLoading !== prevLoading ||
@@ -55,7 +68,6 @@ export const createKeycloakProvider = KeycloakContext => {
         });
       }
 
-      // Notify token listener, if any
       if (newToken !== prevToken) {
         onTokens &&
           onTokens({
@@ -68,30 +80,15 @@ export const createKeycloakProvider = KeycloakContext => {
 
     const refreshKeycloakToken = event => () => {
       onEvent && onEvent(event);
-
-      // Refresh Keycloak token
       keycloak.updateToken(5);
     };
 
-    const init = () => {
-      // Attach Keycloak listeners
-      keycloak.onReady = updateState('onReady');
-      keycloak.onAuthSuccess = updateState('onAuthSuccess');
-      keycloak.onAuthError = onKeycloakError('onAuthError');
-      keycloak.onAuthRefreshSuccess = updateState('onAuthRefreshSuccess');
-      keycloak.onAuthRefreshError = onKeycloakError('onAuthRefreshError');
-      keycloak.onAuthLogout = updateState('onAuthLogout');
-      keycloak.onTokenExpired = refreshKeycloakToken('onTokenExpired');
-
-      keycloak.init({ ...defaultInitConfig, ...initConfig });
-    };
-
     useEffect(() => {
-      console.log('init')
-      init();
+      if (!state.initialized) {
+        init();
+      }
 
       return () => {
-        console.log('clean init')
         keycloak.onReady = undefined;
         keycloak.onAuthSuccess = undefined;
         keycloak.onAuthError = undefined;
@@ -99,21 +96,27 @@ export const createKeycloakProvider = KeycloakContext => {
         keycloak.onAuthRefreshError = undefined;
         keycloak.onAuthLogout = undefined;
         keycloak.onTokenExpired = undefined;
+
+        resetState();
+
+        init();
       };
-    }, []);
+    }, [keycloak, initConfig]);
 
     if (!!LoadingComponent && (!state.initialized || state.isLoading)) {
       return LoadingComponent;
     }
 
     return (
-      <KeycloakContext.Provider value={{ initialized, keycloak }}>
+      <KeycloakContext.Provider
+        value={{ initialized: state.initialized, keycloak }}
+      >
         {children}
       </KeycloakContext.Provider>
     );
   };
 
-  keycloakProvider.propTypes = {
+  KeycloakProvider.propTypes = {
     children: element.isRequired,
     keycloak: shape({
       init: func.isRequired,
@@ -136,8 +139,7 @@ export const createKeycloakProvider = KeycloakContext => {
     onEvent: func,
     onTokens: func
   };
-
-  keycloakProvider.defaultProps = {
+  KeycloakProvider.defaultProps = {
     initConfig: {
       onLoad: 'check-sso',
       promiseType: 'native'
@@ -149,7 +151,7 @@ export const createKeycloakProvider = KeycloakContext => {
     onTokens: null
   };
 
-  return keycloakProvider;
+  return KeycloakProvider;
 };
 
 export const KeycloakContext = createKeycloakContext();
