@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import Keycloak from 'keycloak-js';
-import { KeycloakProvider } from '@react-keycloak/web';
+import { KeycloakProvider } from '@ksakira10/react-keycloak-js';
 import Pages from './pages';
 import configureStore from './store/configureStore';
 import { $ } from './shared/utils';

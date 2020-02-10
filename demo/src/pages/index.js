@@ -3,7 +3,7 @@ import React, { lazy, Suspense } from 'react';
 import { shape, arrayOf, string, bool, object } from 'prop-types';
 import { connect } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { useKeycloak } from '@react-keycloak/web';
+import { useKeycloak } from '@ksakira10/react-keycloak-js';
 import Fallback from '../shared/components/Fallback';
 import PrivateRoute from '../shared/components/PrivateRoute';
 import Layout from '../shared/components/Layout';

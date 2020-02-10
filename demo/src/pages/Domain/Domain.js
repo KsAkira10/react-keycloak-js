@@ -1,10 +1,10 @@
 // @flow
 import React, { useEffect, useState, useCallback } from 'react';
+import { shape, func } from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { useKeycloak } from '@react-keycloak/web';
+import { useKeycloak } from '@ksakira10/react-keycloak-js';
 import { domainAction } from '../../store/ducks/example';
-import { shape, func } from 'prop-types';
 
 const Container = styled.main`
   width: 100%;

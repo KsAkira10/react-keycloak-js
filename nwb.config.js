@@ -15,7 +15,7 @@ module.exports = {
   },
   webpack: {
     aliases: {
-      '@react-keycloak/web': path.resolve('src')
+      '@ksakira10/react-keycloak-js': path.resolve('src')
     },
     html: {
       mountId: 'root',

@@ -2,7 +2,7 @@
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { withRouter, Redirect } from 'react-router-dom';
-import { withKeycloak } from '@react-keycloak/web';
+import { withKeycloak } from '@ksakira10/react-keycloak-js';
 
 const Container = styled.main`
   width: 100%;
