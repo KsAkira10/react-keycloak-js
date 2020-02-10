@@ -1,6 +1,6 @@
 {
   "name": "@ksakira10/react-keycloak-js",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A Keycloak's adapter building for React",
   "main": "lib/index.js",
   "module": "es/index.js",
