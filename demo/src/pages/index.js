@@ -1,26 +1,70 @@
-import React from 'react';
-import { BrowserRouter, Route, Link } from 'react-router-dom';
-import ProtectedRoute from '../shared/components/ProtectedRoute';
-import Home from './Home';
-import About from './About';
-import Login from './Login';
-import Dashboard from './Dashboard';
+// @flow
+import React, { lazy, Suspense } from 'react';
+import { shape, arrayOf, string, bool, object } from 'prop-types';
+import { connect } from 'react-redux';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { useKeycloak } from '@react-keycloak/web';
+import Fallback from '../shared/components/Fallback';
+import PrivateRoute from '../shared/components/PrivateRoute';
+import Layout from '../shared/components/Layout';
 
-const Pages = () => (
-  <BrowserRouter>
-    <Route path='/'>
-      <Home />
-    </Route>
-    <Route path='/about'>
-      <About />
-    </Route>
-    <Route path='/login'>
-      <Login />
-    </Route>
-    <ProtectedRoute path='/dashboard'>
-      <Dashboard />
-    </ProtectedRoute>
-  </BrowserRouter>
-);
+const Pages = ({ history, routes }) => {
+  const [, initialized] = useKeycloak();
 
-export default Pages;
+  if (!initialized) {
+    return <Fallback />;
+  }
+
+  return (
+    <BrowserRouter history={history}>
+      <Layout>
+        <Switch>
+          <Suspense fallback={<Fallback />}>
+            {routes.map(({ path, exact, component, isAuth }) =>
+              isAuth == null ? (
+                <Route path={path} exact={exact} component={component} key={path} />
+              ) : (
+                <PrivateRoute path={path} exact={exact} component={component} key={path} />
+              ),
+            )}
+          </Suspense>
+        </Switch>
+      </Layout>
+    </BrowserRouter>
+  );
+};
+
+Pages.propTypes = {
+  history: shape({}),
+  routes: arrayOf(
+    shape({
+      path: string,
+      exact: bool,
+      isAuth: bool,
+      component: object,
+    }),
+  ),
+};
+
+Pages.defaultProps = {
+  routes: [
+    {
+      path: '/',
+      exact: true,
+      component: lazy(() => import('./Home')),
+    },
+    {
+      path: '/login',
+      exact: true,
+      component: lazy(() => import('./Login')),
+    },
+    {
+      path: '/domain',
+      exact: true,
+      isAuth: true,
+      component: lazy(() => import('./Domain')),
+    },
+  ],
+};
+
+export default connect(({ history }) => ({ history }))(Pages);

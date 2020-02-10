@@ -1,7 +1,4 @@
-const webpack = require('webpack');
-const { parsed } = require('dotenv').config({
-  path: `${process.cwd()}/demo/.env`
-});
+const path = require('path');
 
 module.exports = {
   type: 'react-component',
@@ -11,17 +8,22 @@ module.exports = {
       global: 'ReactKeycloak',
       externals: {
         react: 'React',
-        'keycloak-js': 'Keycloak'
+        'keycloak-js': 'Keycloak',
+        'react-router': 'ReactRouter'
       }
     }
   },
   webpack: {
-    extra: {
-      plugins: [
-        new webpack.EnvironmentPlugin({
-          ...parsed
-        })
-      ]
+    aliases: {
+      '@react-keycloak/web': path.resolve('src')
+    },
+    html: {
+      mountId: 'root',
+      title: 'React with OIDC'
+    },
+    define: {
+      __VERSION__: JSON.stringify(require('./package.json').version),
+      NODE_ENV: JSON.stringify(process.env.NODE_ENV)
     }
   }
 };
