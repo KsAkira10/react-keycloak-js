@@ -20,14 +20,6 @@ const Pages = () => (
     <ProtectedRoute path='/dashboard'>
       <Dashboard />
     </ProtectedRoute>
-    <ul>
-      <li>
-        <Link to='/home'>Home</Link>
-      </li>
-      <li>
-        <Link to='/about'>About</Link>
-      </li>
-    </ul>
   </BrowserRouter>
 );
 

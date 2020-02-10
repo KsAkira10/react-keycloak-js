@@ -87,28 +87,20 @@ export const createKeycloakProvider = KeycloakContext => {
     };
 
     useEffect(() => {
+      console.log('init')
       init();
 
-      return () => console.log('init killed!');
+      return () => {
+        console.log('clean init')
+        keycloak.onReady = undefined;
+        keycloak.onAuthSuccess = undefined;
+        keycloak.onAuthError = undefined;
+        keycloak.onAuthRefreshSuccess = undefined;
+        keycloak.onAuthRefreshError = undefined;
+        keycloak.onAuthLogout = undefined;
+        keycloak.onTokenExpired = undefined;
+      };
     }, []);
-
-    useEffect(() => {
-      // De-init previous Keycloak instance
-      keycloak.onReady = undefined;
-      keycloak.onAuthSuccess = undefined;
-      keycloak.onAuthError = undefined;
-      keycloak.onAuthRefreshSuccess = undefined;
-      keycloak.onAuthRefreshError = undefined;
-      keycloak.onAuthLogout = undefined;
-      keycloak.onTokenExpired = undefined;
-
-      // Reset state
-      setState({ ...initialState });
-      // Init new Keycloak instance
-      init();
-
-      return () => console.log('de-init killed!');
-    }, [keycloak, initConfig]);
 
     if (!!LoadingComponent && (!state.initialized || state.isLoading)) {
       return LoadingComponent;

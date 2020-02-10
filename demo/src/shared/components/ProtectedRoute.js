@@ -2,14 +2,16 @@ import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { useKeycloak } from '../../../../src';
 
-const ProtectedRoute = ({ children: Component, ...rest }) => {
-  const [keycloak] = useKeycloak();
+const ProtectedRoute = ({ children, ...rest }) => {
+  const { keycloak } = useKeycloak();
+  console.log('keycloak.authenticated: ', keycloak.authenticated);
   return (
     <Route
       {...rest}
       render={props =>
+        typeof keycloak.authenticated === 'undefined' ||
         keycloak.authenticated ? (
-          <Component {...props} />
+          children
         ) : (
           <Redirect
             to={{

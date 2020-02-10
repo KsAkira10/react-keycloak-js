@@ -30,6 +30,7 @@
     "react": ">=16"
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "nwb": "0.23.x",
     "react": "^16.12.0",
     "react-dom": "^16.12.0"
@@ -44,5 +45,8 @@
   "keywords": [
     "react",
     "keycloak-js"
-  ]
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  }
 }

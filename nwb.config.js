@@ -1,3 +1,8 @@
+const webpack = require('webpack');
+const { parsed } = require('dotenv').config({
+  path: `${process.cwd()}/demo/.env`
+});
+
 module.exports = {
   type: 'react-component',
   npm: {
@@ -6,8 +11,17 @@ module.exports = {
       global: 'ReactKeycloak',
       externals: {
         react: 'React',
-        keycloak: 'Keycloak',
+        'keycloak-js': 'Keycloak'
       }
     }
+  },
+  webpack: {
+    extra: {
+      plugins: [
+        new webpack.EnvironmentPlugin({
+          ...parsed
+        })
+      ]
+    }
   }
-}
+};
